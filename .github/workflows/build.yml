@@ -25,25 +25,18 @@ jobs:
           cd halium
           repo init -u https://github.com/Halium/android -b halium-11.0 --depth=1 -q
           mkdir -p .repo/local_manifests
-          cp $GITHUB_WORKSPACE/local_manifest.xml .repo/local_manifests/gta4l.xml
+          cp $GITHUB_WORKSPACE/local_manifest.xml .repo/local_manifests/gta4l.xml || echo "Manifest copy failed!"
           repo sync -c -j4 --force-sync --no-tags -q
 
       - name: Build halium-boot
         run: |
           cd halium
           source build/envsetup.sh
-          breakfast gta4l || echo "Breakfast failed, trying lunch..."
-          lunch halium_gta4l-userdebug
+          breakfast gta4l || lunch halium_gta4l-userdebug
           mka halium-boot -j3 2>&1 | tee build.log
 
-      - name: Upload halium-boot.img
+      - name: Upload halium-boot
         uses: actions/upload-artifact@v4
         with:
           name: halium-boot-gta4l
           path: halium/out/target/product/gta4l/halium-boot.img
-
-      - name: Upload Build Log
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-log
-          path: halium/build.log
