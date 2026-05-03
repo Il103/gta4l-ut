@@ -5,10 +5,17 @@
   <remote name="them" fetch="https://github.com/TheMuppets" />
   <remote name="halium" fetch="https://github.com/Halium" />
 
+  <!-- Device -->
   <project path="device/samsung/gta4l" name="android_device_samsung_gta4l" remote="il103" revision="lineage-22.2" />
   <project path="device/samsung/gta4l-common" name="android_device_samsung_gta4l-common" remote="il103" revision="lineage-22.2" />
+
+  <!-- Kernel -->
   <project path="kernel/samsung/sm6115" name="android_kernel_samsung_sm6115" remote="los" revision="lineage-22.2" />
-  <project path="vendor/samsung/gta4l" name="proprietary_vendor_samsung_gta4l" remote="them" />
-  <project path="vendor/samsung/gta4l-common" name="proprietary_vendor_samsung_gta4l-common" remote="them" />
-  <project path="hardware/samsung" name="android_hardware_samsung" remote="los" />
+
+  <!-- Vendor - استخدم branch صحيح -->
+  <project path="vendor/samsung/gta4l" name="proprietary_vendor_samsung_gta4l" remote="them" revision="lineage-22.2" />
+  <project path="vendor/samsung/gta4l-common" name="proprietary_vendor_samsung_gta4l-common" remote="them" revision="lineage-22.2" />
+
+  <!-- Hardware -->
+  <project path="hardware/samsung" name="android_hardware_samsung" remote="los" revision="lineage-22.2" />
 </manifest>
