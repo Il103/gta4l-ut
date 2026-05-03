@@ -6,31 +6,44 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+
     steps:
-      - name: Free Space
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Free Disk Space
         uses: jlumbroso/free-disk-space@main
 
-      - name: Install Packages
+      - name: Install Dependencies
         run: |
-          sudo apt update
-          sudo apt install -y repo git bc bison build-essential ccache flex g++-multilib gcc-multilib libssl-dev python3
+          sudo apt-get update -qq
+          sudo apt-get install -y repo git bc bison build-essential ccache curl flex g++-multilib gcc-multilib libssl-dev python3
 
-      - name: Download Sources
+      - name: Initialize Halium Sources
         run: |
-          mkdir halium && cd halium
-          repo init -u https://github.com/Halium/android -b halium-11.0 --depth=1
-          cp ../local_manifest.xml .repo/local_manifests/gta4l.xml
-          repo sync -c -j4 --force-sync
+          mkdir -p halium
+          cd halium
+          repo init -u https://github.com/Halium/android -b halium-11.0 --depth=1 -q
+          mkdir -p .repo/local_manifests
+          cp $GITHUB_WORKSPACE/local_manifest.xml .repo/local_manifests/gta4l.xml
+          repo sync -c -j4 --force-sync --no-tags -q
 
-      - name: Build
+      - name: Build halium-boot
         run: |
           cd halium
           source build/envsetup.sh
-          breakfast gta4l
-          mka halium-boot -j2 2>&1 | tee build.log
+          breakfast gta4l || echo "Breakfast failed, trying lunch..."
+          lunch halium_gta4l-userdebug
+          mka halium-boot -j3 2>&1 | tee build.log
 
-      - name: Upload ROM
+      - name: Upload halium-boot.img
         uses: actions/upload-artifact@v4
         with:
-          name: halium-boot
+          name: halium-boot-gta4l
           path: halium/out/target/product/gta4l/halium-boot.img
+
+      - name: Upload Build Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: halium/build.log
