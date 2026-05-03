@@ -1,0 +1,36 @@
+name: Build Ubuntu Touch gta4l
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Free Space
+        uses: jlumbroso/free-disk-space@main
+
+      - name: Install Packages
+        run: |
+          sudo apt update
+          sudo apt install -y repo git bc bison build-essential ccache flex g++-multilib gcc-multilib libssl-dev python3
+
+      - name: Download Sources
+        run: |
+          mkdir halium && cd halium
+          repo init -u https://github.com/Halium/android -b halium-11.0 --depth=1
+          cp ../local_manifest.xml .repo/local_manifests/gta4l.xml
+          repo sync -c -j4 --force-sync
+
+      - name: Build
+        run: |
+          cd halium
+          source build/envsetup.sh
+          breakfast gta4l
+          mka halium-boot -j2 2>&1 | tee build.log
+
+      - name: Upload ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: halium-boot
+          path: halium/out/target/product/gta4l/halium-boot.img
