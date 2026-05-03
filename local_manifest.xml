@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="il103" fetch="https://github.com/Il103" />
+  <remote name="los" fetch="https://github.com/LineageOS" />
+  <remote name="them" fetch="https://github.com/TheMuppets" />
+  <remote name="halium" fetch="https://github.com/Halium" />
+
+  <project path="device/samsung/gta4l" name="android_device_samsung_gta4l" remote="il103" revision="lineage-22.2" />
+  <project path="device/samsung/gta4l-common" name="android_device_samsung_gta4l-common" remote="il103" revision="lineage-22.2" />
+  <project path="kernel/samsung/sm6115" name="android_kernel_samsung_sm6115" remote="los" revision="lineage-22.2" />
+  <project path="vendor/samsung/gta4l" name="proprietary_vendor_samsung_gta4l" remote="them" />
+  <project path="vendor/samsung/gta4l-common" name="proprietary_vendor_samsung_gta4l-common" remote="them" />
+  <project path="hardware/samsung" name="android_hardware_samsung" remote="los" />
+</manifest>
